@@ -1,0 +1,29 @@
+<div class="row">
+<div class="col-12 col-md-9 col-lg-6 mb-3">
+	<h4 class="mt">{question}?</h4> <br>
+{?radio}
+	{#radio.answers}
+		  <div class="form-check">
+			  <label class="form-check-label">
+				 <input class="form-check-input mr-2" type="radio" name="radio" id="{$idx}" value="{.}">
+				 {.}
+			  </label>
+		  </div>
+	{/radio.answers}
+{/radio}
+{?checkbox}
+		{#checkbox.answers}
+		<div class="form-check">
+		  <label class="form-check-label">
+			<input class="form-check-input mr-2" type="checkbox" name="checkbox" id="{$idx}" value="{.}">
+			 {.}
+		  </label>
+		</div>
+		{/checkbox.answers}
+{/checkbox}
+{?area}
+		<textarea class="form-control" placeholder="{area}" id="area"></textarea><br>
+{/area}
+	<button class="btn btn-outline-dark" type="button">Ответить</button>
+</div>
+</div>

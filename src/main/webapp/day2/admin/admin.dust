@@ -1,0 +1,39 @@
+
+<div class='container'>
+	<div class='row'>
+		<div class="col-3">
+			<div class="nav flex-column nav-pills main" id="v-pills-tab" role="tablist">
+				<a class="nav-link active" id="v-pills-new-tab" data-toggle="pill" href="#v-pills-new" role="tab" aria-controls="v-pills-new" aria-expanded="true">Добавить раздел</a>
+				{#sections}
+				<a class="nav-link" id="v-pills-{$idx}-tab" href="" data-href="#v-pills-{.name}">Раздел {.name}</a>
+				
+				<div class="nav flex-column hide ml-3" id="v-pills-tab-{.name}" data-id="#v-pills-{.name}" role="tablist">
+					<a class="nav-link active" id="v-pills-question-new-tab" data-toggle="pill" href="#v-pills-question-new" role="tab" aria-controls="v-pills-new" aria-expanded="true">Добавить вопрос</a>
+					{#.questions}
+					<a class="nav-link" id="v-pills-question-{$idx}-tab" href="#v-pills-{.id}" data-question-id="{.id}">Вопрос {$idx}</a>
+					{/.questions}
+				</div>
+				
+				<div class="hide ml-4" id="v-pills-{$idx}">
+				<p> {.} </p>
+				</div>
+				{/sections}
+				</div>
+		</div>
+		<div class="col-9">
+				{#sections}
+				<div class="tab-content" id="v-pills-tabContent-{.name}">
+					<div class="tab-pane fade show active" id="v-pills-question-new" role="tabpanel" aria-labelledby="v-pills-new-tab">
+						<textarea class="form-control" placeholder="Введите текст вопроса">{.name}</textarea>
+					</div>
+				{#.questions}
+					<div class="tab-pane fade" id="v-pills-{.id}" role="tabpanel" aria-labelledby="v-pills-{.id}-tab">
+						<textarea class="form-control" placeholder="Введите текст вопроса">{.name}</textarea>
+					</div>
+				{/.questions}
+				</div>
+				{/sections}
+			
+			</div>
+	</div>
+</div>
