@@ -1,5 +1,8 @@
 package com.testing.system.model;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import javax.persistence.*;
 import java.util.List;
 
@@ -17,6 +20,14 @@ public class Section {
     private List<Question> questions;
 
     private String name;
+
+    public Section(){
+
+    }
+
+    public Section(String name) {
+        this.name = name;
+    }
 
     public Long getId() {
         return id;
@@ -37,4 +48,26 @@ public class Section {
     public List<Question> getQuestions() {
         return questions;
     }
+
+    public String toString(){
+        String answer="{\"name\":\""+name+"\",\"questions\":[";
+        ObjectMapper objectMapper = new ObjectMapper();
+        if(questions.size()>0) {
+            for (Question question : questions) {
+                try {
+                    answer += objectMapper.writeValueAsString(question) + ",";
+                } catch (JsonProcessingException e) {
+                    e.printStackTrace();
+                }
+
+            }
+            answer = answer.substring(0,answer.length()-1) + "]}";
+        } else {
+            answer = answer.substring(0,answer.length()-1) + "\"\"}";
+        }
+
+        System.out.println(answer);
+        return answer;
+    }
+
 }

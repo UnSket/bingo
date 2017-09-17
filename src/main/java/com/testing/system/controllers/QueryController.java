@@ -9,6 +9,8 @@ import com.testing.system.data.SectionsRepository;
 import com.testing.system.model.Answers;
 import com.testing.system.model.Examinee;
 import com.testing.system.model.Question;
+import com.testing.system.model.Section;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -31,27 +33,6 @@ public class QueryController {
 		this.examineedata = examineedata;
 	}
 
-/*	@RequestMapping(value = "/addNewEmployee.html", method = RequestMethod.POST)
-	public String newQuestion(Question question) {
-
-		questionData.save(question);
-		return ("redirect:/listEmployees.html");
-
-	}*/
-
-	/*@RequestMapping(value = "/addNewEmployee.html", method = RequestMethod.GET)
-	public ModelAndView addNewQuestion() {
-
-		Question emp = new Question();
-		return new ModelAndView("newEmployee", "form", emp);
-
-	}*/
-
-	/*@RequestMapping(value = "/listEmployees.html", method = RequestMethod.GET)
-	public ModelAndView employees() {
-		List<Question> allQuestions = questionData.findAll();
-		return new ModelAndView("allEmployees", "employees", allQuestions);
-	}*/
 
 	//создает нового пустого пользователя назначает ему токен, и секцию возвращает токен
 	// пример: http://localhost:8080/newExaminee?section=back (только постом передаешь)
@@ -111,8 +92,8 @@ public class QueryController {
 		if(examinee != null) {
 			if (examinee.getSection().getQuestions().size() >
 					examinee.getAnswers().size())
-				return ResponseEntity.ok(examinee.getSection().getQuestions().toArray()
-						[examinee.getAnswers().size()].toString());
+				return ResponseEntity.ok(((Question)(examinee.getSection().getQuestions().toArray()
+						[examinee.getAnswers().size()])).toString1());
 			else {
 				return ResponseEntity.ok("end");
 			}
@@ -126,13 +107,36 @@ public class QueryController {
 	public ResponseEntity<Collection> getQuestionsBySectionId(@RequestParam("name") String sectionName){
 		return ResponseEntity.ok(questionData.findBySectionsName(sectionName));
 	}*/
+	@PutMapping(value="/addQuestion")
+	public ResponseEntity<String> add(@RequestParam("jsonObj") String json){
+		JSONObject jsonObject = new JSONObject(json);
+		//проверить входящие данные
+		questionData.save(new Question(jsonObject.getJSONObject("question").getString("text"),
+				jsonObject.getJSONObject("question").getString("type"),
+				jsonObject.getJSONObject("question").getString("answers"),
+				jsonObject.getJSONObject("question").getString("correct_answer"),
+				sectionsData.findByName(jsonObject.getString("section"))));
+		return ResponseEntity.ok("Успех");
+	}
+
+	@PutMapping(value = "/addSection")
+	public ResponseEntity<String> addSection(@RequestParam("json") String json){
+		JSONObject jsonObject = new JSONObject(json);
+		sectionsData.save(new Section(jsonObject.getString("section")));
+		return ResponseEntity.ok("Успех");
+	}
 
 	//добавляет вопрос с заданными полями
 	@GetMapping(value="/addQuestionByGet")
 	public ResponseEntity<String> add(@RequestParam("text") String text, @RequestParam("type") String type, @RequestParam("answers") String answers, @RequestParam("correct_answer") String correct_answer){
-		return ResponseEntity.ok(questionData.save(new Question(text,type,answers,correct_answer)).getId()+"");
+		return ResponseEntity.ok("");
 	}
 
-
+	@GetMapping(value="/getSections")
+	public ResponseEntity<String> getSections(){
+		String answer="{\"sections\":"+sectionsData.findAll().toString()+"}";
+		System.out.println(answer);
+		return ResponseEntity.ok(answer);
+	}
 
 }

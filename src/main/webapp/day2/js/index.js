@@ -3,7 +3,7 @@ $(function(){
                 currentPage=localStorage.getItem('currentPage');
     			var path;
     			path = route().path;
-    			if(!path || path[0] != currentPage) {
+    			if((!path || path[0] != currentPage) && path[0]!=="admin/") {
     				location.hash = currentPage;
     				return;
     			}
@@ -29,38 +29,43 @@ $(function(){
 					case "final":
 					loadDust();
 					break;
+					case "admin":
+					$.get("/getSections", function(data){
+					var sections = JSON.parse(data);
+						loadDust(sections/* {
+						'sections' : [
+							{"name":"section1",
+							"questions":[
+								{'text':'question1',
+								'answers':'long long long long long answer',
+								'area':'true',
+								'id':'1'},
+								{'text':'question2',
+								'answers':['answ3','answ4'],
+								'checkbox':'true',
+								'id':'2'}
+								]},
+							{"name":"section2",
+							"questions":[
+								{'text':'question3',
+								'answers':['answ1','answ2'],
+								'radio':'true',
+								'id':'3'},
+								{'text':'question4',
+								'answers':['answ3','answ4'],
+								'checkbox':'true',
+								'id':'4'}
+								]},
+							{"name":"section3"},
+							{"name":"section4"}
+						]} */);
+					})
 				}
     			
     			function loadDust(data){
 					$.get(path.toString() + ".dust", function(dustData){
     				$('.wrapper>.container').empty();
-    				dust.renderSource(dustData, data /*{
-    				'sections' : [
-    					{"name":"section1",
-    					"questions":[
-    						{'name':'question1',
-    						'answers':['answ1','answ2'],
-    						'type':'radio',
-    						'id':'1'},
-    						{'name':'question2',
-    						'answers':['answ3','answ4'],
-    						'type':'checkbox',
-    						'id':'2'}
-    						]},
-    					{"name":"section2",
-    					"questions":[
-    						{'name':'question3',
-    						'answers':['answ1','answ2'],
-    						'type':'radio',
-    						'id':'3'},
-    						{'name':'question4',
-    						'answers':['answ3','answ4'],
-    						'type':'checkbox',
-    						'id':'4'}
-    						]},
-    					{"name":"section3"},
-    					{"name":"section4"}
-    				]} */, function(err, out) {
+    				dust.renderSource(dustData, data, function(err, out) {
     					if (err) {
     						location.hash = currentPage;
     						console.log(err);
@@ -80,27 +85,31 @@ $(function(){
     	}
 
 	var currentPage;
-	currentPage = localStorage.getItem("currentPage");
-	if(!currentPage){
-		currentPage="index/";
-		$.ajax({
-          type: "POST",
-          url: "/newExaminee",
-          data: "section="+location.hash.slice(1),
-          success: function(msg){
-          if(msg!=="false"){
-            alert( "Твой токен: " + msg );
-            location.hash="";
-            localStorage.setItem("token",msg);
-            localStorage.setItem("currentPage", currentPage);
-            start();
-            } else {
-            //тут если секция не найдена
-            }
-          }
-        });
+	if(route().path[0]!=="admin/") {
+		currentPage = localStorage.getItem("currentPage");
+		if(!currentPage){
+			currentPage="index/";
+			$.ajax({
+			  type: "POST",
+			  url: "/newExaminee",
+			  data: "section="+location.hash.slice(1),
+			  success: function(msg){
+			  if(msg!=="false"){
+				alert( "Твой токен: " + msg );
+				location.hash="";
+				localStorage.setItem("token",msg);
+				localStorage.setItem("currentPage", currentPage);
+				start();
+				} else {
+				//тут если секция не найдена
+				}
+			  }
+			});
+		} else {
+			start();
+		}
 	} else {
-	    start();
+		start();
 	}
 
 	function start() {

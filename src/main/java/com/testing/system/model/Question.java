@@ -1,6 +1,12 @@
 package com.testing.system.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import javax.persistence.*;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -8,8 +14,9 @@ import java.util.List;
 public class Question {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
+	@JsonIgnore
 	private long id;
-
+	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL)
 	@JoinTable(name = "sections_questions", joinColumns = @JoinColumn(name = "question_id", referencedColumnName = "id"), inverseJoinColumns = @JoinColumn(name = "section_id", referencedColumnName = "id"))
 	private List<Section> sections;
@@ -17,15 +24,18 @@ public class Question {
 	private String text;
 	private String type;
 	private String answers;
+	@JsonIgnore
 	private String correct_answer;
 	public Question(){
 
 	}
-	public Question(String text, String type, String answers, String correct_answer) {
+	public Question(String text, String type, String answers, String correct_answer, Section section) {
 		this.text = text;
 		this.type = type;
 		this.answers = answers;
 		this.correct_answer = correct_answer;
+		this.sections = new ArrayList<>();
+		this.sections.add(section);
 	}
 
 	public String getText() {
@@ -64,8 +74,7 @@ public class Question {
 		return id;
 	}
 
-	@Override
-	public String toString() {
+	public String toString1() {
 		String answer= "{\"" +type+ "\":{\"answers\":[";
 		if(type!="area") {
 			String[] mas = answers.split(",");
