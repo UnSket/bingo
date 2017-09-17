@@ -52,6 +52,10 @@ public class QueryController {
 		List<Question> allQuestions = questionData.findAll();
 		return new ModelAndView("allEmployees", "employees", allQuestions);
 	}*/
+
+	//создает нового пустого пользователя назначает ему токен, и секцию возвращает токен
+	// пример: http://localhost:8080/newExaminee?section=back (только постом передаешь)
+	//создастся новый пользователь с вопросами по секции с именем "back", если такой секции нету вернет false
 	@PostMapping(value = "/newExaminee")
 	ResponseEntity<String> newExaminee(@RequestParam("section") String section){
 		Examinee examinee = new Examinee();
@@ -68,7 +72,7 @@ public class QueryController {
 		examineedata.saveAndFlush(examinee);
 		return ResponseEntity.ok(examinee.getToken()+"");
 	}
-
+	//Добавляет данные имени и почты пользавателю с переданным токеном, ничего не возвращает в случае успеха, в случае ошибки вернет false
 	@PostMapping("/registration")
 	ResponseEntity<String> registarateExaminee(@RequestParam("token") int token,
 											   @RequestParam("name") String name,
@@ -84,7 +88,7 @@ public class QueryController {
 		}
 	}
 
-
+	//Добавляет ответ пользавателю с переданным токеном, в случае успеха вернет строку "Успех", в случае ошибки вернет "false"
 	@PostMapping("/addAnswer")
 	ResponseEntity<String> addAnswer(@RequestParam("answer") String answer,
 									 @RequestParam("token") int token){
@@ -100,6 +104,7 @@ public class QueryController {
 		return ResponseEntity.ok("false");
 	}
 
+	//возвращает следующий вопрос пользователю с переданным токеном. Если вопросы по его секции кончились, то вернет "end", в случае ошибки вернет "false"
 	@GetMapping(value="/getQuestion")
 	public ResponseEntity<String> getQuestion(@RequestParam("token") int token){
 		Examinee examinee = examineedata.findOneByToken(token);
@@ -116,12 +121,13 @@ public class QueryController {
 		}
 	}
 
-	@GetMapping(value="/getQuestionBySectionName")
+
+	/*@GetMapping(value="/getQuestionBySectionName")
 	public ResponseEntity<Collection> getQuestionsBySectionId(@RequestParam("name") String sectionName){
 		return ResponseEntity.ok(questionData.findBySectionsName(sectionName));
-	}
+	}*/
 
-
+	//добавляет вопрос с заданными полями
 	@GetMapping(value="/addQuestionByGet")
 	public ResponseEntity<String> add(@RequestParam("text") String text, @RequestParam("type") String type, @RequestParam("answers") String answers, @RequestParam("correct_answer") String correct_answer){
 		return ResponseEntity.ok(questionData.save(new Question(text,type,answers,correct_answer)).getId()+"");
