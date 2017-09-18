@@ -32,12 +32,11 @@ function index(){
               ,
               success: function(msg){
               if(msg!=="false"){
-                alert( "Успешно зарегестрирован");
                 localStorage.setItem("currentPage", "questions/");
                 currentPage = "questions/";
                 location.hash = "questions/";
                 } else {
-                //ошибки тут
+					alert("Не шали!");
                 }
               }
             });

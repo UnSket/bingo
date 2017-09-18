@@ -1,6 +1,13 @@
 function admin(){
 	var section="";
 	$("[data-toggle='popover']").popover();
+	
+	$names = $(".name");
+	for(var i=0; i<$names.length; i++){
+		$names[i].href=encodeURI($names[i].href + "#" + $names[i].text);
+		$names[i].text=$names[i].href;
+	}
+	$names.removeAttr('href');
 	$("a").unbind('click');
 	$("a").on("click", function(){
 		$("[data-toggle='popover']").popover('hide');
@@ -14,9 +21,8 @@ function admin(){
 			$("[data-toggle='popover']").popover();
 		});
 	}
-	function checkFields($father){
+	function checkFields($father, patern){
 		isOk=true;
-		patern = /^.*([a-zA-Zа-яА-Я])+.*/i;
 		$checking=$father.find("[data-toggle='popover']");
 		for(var i=0; i<$checking.length; i++){
 			if($checking[i].value===""){
@@ -54,7 +60,7 @@ function admin(){
 	$('.addSection').on("click",function(){
 		var isOk=true;
 		$father=$(this).closest('.tab-pane');
-		isOk = checkFields($father);
+		isOk = checkFields($father, /^.*([a-zA-Z])+.*/i);
 		if(isOk){
 			$("[data-toggle='popover']").popover('hide');
 			$.ajax({
@@ -78,7 +84,7 @@ function admin(){
 	$(".save").on('click', function(){
 		var isOk=true;
 		$father=$(this).closest('.tab-pane');
-		isOk = checkFields($father);
+		isOk = checkFields($father, /^.*([a-zA-Zа-яА-Я])+.*/i);
 		if(isOk){
 			$("[data-toggle='popover']").popover('hide');
 			type=$father.find('input[type="radio"]:checked').val();
@@ -113,7 +119,7 @@ function admin(){
     $(".update").on('click', function(){
     	var isOk=true;
 		$father=$(this).closest('.tab-pane');
-		isOk = checkFields($father);
+		isOk = checkFields($father, /^.*([a-zA-Zа-яА-Я])+.*/i);
 		if(isOk){
     		type=$father.find('input[type="radio"]:checked').val();
     		var answers="";

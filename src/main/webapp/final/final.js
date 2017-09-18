@@ -1,3 +1,4 @@
 function final(){
-	localStorage.clear();
+	localStorage.removeItem('currentPage');
+	localStorage.removeItem('token');
 }
