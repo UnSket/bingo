@@ -1,7 +1,10 @@
 package com.testing.system.controllers;
 
+import java.io.IOException;
 import java.util.Collection;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.testing.system.data.AnswersRepository;
 import com.testing.system.data.ExamineeRepository;
 import com.testing.system.data.QuestionsRepository;
@@ -10,6 +13,7 @@ import com.testing.system.model.Answers;
 import com.testing.system.model.Examinee;
 import com.testing.system.model.Question;
 import com.testing.system.model.Section;
+import org.json.JSONException;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -25,12 +29,18 @@ public class QueryController {
 	private AnswersRepository answersData;
 	private ExamineeRepository examineedata;
 
+	private ObjectMapper objectMapper;
+	private TypeReference<Question> typeReference;
+
 	@Autowired
 	public QueryController(QuestionsRepository questionData, SectionsRepository sectionsData, AnswersRepository answersData, ExamineeRepository examineedata) {
 		this.questionData = questionData;
 		this.sectionsData = sectionsData;
 		this.answersData = answersData;
 		this.examineedata = examineedata;
+
+		objectMapper = new ObjectMapper();
+		typeReference = new TypeReference<Question>() {};
 	}
 
 
@@ -107,15 +117,28 @@ public class QueryController {
 	public ResponseEntity<Collection> getQuestionsBySectionId(@RequestParam("name") String sectionName){
 		return ResponseEntity.ok(questionData.findBySectionsName(sectionName));
 	}*/
+	@PostMapping(value ="/updateQuestion")
+	public ResponseEntity<String> updateQuestion(@RequestParam("jsonObj") String json){
+		JSONObject jsonObject = new JSONObject(json);
+		Long id = Long.parseLong(jsonObject.getJSONObject("question").getString("id"));
+		Question question = questionData.getOne(id);
+		question.setText(jsonObject.getJSONObject("question").getString("text"));
+		question.setAnswers(jsonObject.getJSONObject("question").getString("answers"));
+		question.setType(jsonObject.getJSONObject("question").getString("type"));
+		questionData.save(question);
+		return ResponseEntity.ok("");
+	}
+
 	@PutMapping(value="/addQuestion")
 	public ResponseEntity<String> add(@RequestParam("jsonObj") String json){
 		JSONObject jsonObject = new JSONObject(json);
-		//проверить входящие данные
-		questionData.save(new Question(jsonObject.getJSONObject("question").getString("text"),
-				jsonObject.getJSONObject("question").getString("type"),
-				jsonObject.getJSONObject("question").getString("answers"),
-				jsonObject.getJSONObject("question").getString("correct_answer"),
-				sectionsData.findByName(jsonObject.getString("section"))));
+		try {
+			Question question = objectMapper.readValue(jsonObject.getJSONObject("question").toString(), typeReference);
+			question.setSection(sectionsData.findByName(jsonObject.getString("section")));
+			questionData.save(question);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 		return ResponseEntity.ok("Успех");
 	}
 
@@ -135,7 +158,6 @@ public class QueryController {
 	@GetMapping(value="/getSections")
 	public ResponseEntity<String> getSections(){
 		String answer="{\"sections\":"+sectionsData.findAll().toString()+"}";
-		System.out.println(answer);
 		return ResponseEntity.ok(answer);
 	}
 

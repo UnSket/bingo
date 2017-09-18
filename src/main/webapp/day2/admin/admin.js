@@ -73,6 +73,37 @@ function admin(){
               }
             });
 	});
+
+	$(".update").unbind('click');
+    $(".update").on('click', function(){
+    		$father=$(this).closest('.tab-pane');
+    		type=$father.find('input[type="radio"]:checked').val();
+    		var answers="";
+    		if(type==="area"){
+    			answers = $father.find('.area-answer').val();
+    		} else {
+    			$fields=$father.find(".answers");
+    			for(var i=0; i< $fields.length; i++){
+    				answers += $fields[i].value+",";
+    			}
+    			answers=answers.slice(0,-1);
+    		}
+    		var jsonData="{'question':{'id':'"+$father.attr('data-id')+"','text':'"+$father.find('textarea').val()+"','type':'"
+    		+type+"','answers':'"+answers+"','correct_answer':'null'}, 'section':'"+section+"'}";
+    		$.ajax({
+                  type: "POST",
+                  url: "/updateQuestion",
+                  data: "jsonObj="+jsonData,
+                  success: function(msg){
+                  if(msg!=="false"){
+                    alert( msg );
+                    location.hash="/next";
+                    } else {
+                    //тут обработка ошибок
+                    }
+                  }
+                });
+    	});
 	$(".type").unbind("change");
 	$(".type").on("change", function(){
 		var $father=$(this).closest('.tab-pane');

@@ -75,6 +75,16 @@ public class Question {
 		return id;
 	}
 
+
+	public void setSection(Section section){
+		if(sections != null){
+			this.sections.add(section);
+		} else {
+			sections = new ArrayList<>();
+			sections.add(section);
+		}
+	}
+
 	public String toString1() {
 		String answer= "{\"" +type+ "\":{\"answers\":[";
 		if(type!="area") {

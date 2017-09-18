@@ -57,7 +57,7 @@
 						<button class="btn btn-outline-dark mt-2 save" type="button">Сохранить</button>
 					</div>
 				{#.questions}
-					<div class="tab-pane fade" id="v-pills-question-{.id}" role="tabpanel" aria-labelledby="v-pills-{.id}-{$idx}-tab">
+					<div class="tab-pane fade" id="v-pills-question-{.id}" data-id="{.id}" role="tabpanel" aria-labelledby="v-pills-{.id}-{$idx}-tab">
 					<h4>Текст вопроса:</h4>
 						<textarea class="form-control" placeholder="Введите текст вопроса">{.text}</textarea>
 						<h4>Тип вопроса:</h4>
@@ -88,7 +88,7 @@
 						{/eq}
 						
 						</br>
-						<button class="btn btn-outline-dark mt-2 save" type="button">Сохранить</button>
+						<button class="btn btn-outline-dark mt-2 update" type="button">Сохранить</button>
 					</div>
 				{/.questions}
 				{/sections}

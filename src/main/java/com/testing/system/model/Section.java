@@ -65,8 +65,6 @@ public class Section {
         } else {
             answer = answer.substring(0,answer.length()-1) + "\"\"}";
         }
-
-        System.out.println(answer);
         return answer;
     }
 
