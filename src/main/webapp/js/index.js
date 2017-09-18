@@ -20,7 +20,7 @@ $(function(){
                                     location.hash="final/";
                                 }
 							} else {
-							//обработка ошибок тут
+								alert("Не шали!");
 							}
 						});
 						break;
@@ -34,33 +34,7 @@ $(function(){
 					$.get("/getSections", function(data){
 					var sections = JSON.parse(data);
 					console.log(sections);
-						loadDust(sections/* {
-						'sections' : [
-							{"name":"section1",
-							"questions":[
-								{'text':'question1',
-								'answers':'long long long long long answer',
-								'area':'true',
-								'id':'1'},
-								{'text':'question2',
-								'answers':['answ3','answ4'],
-								'checkbox':'true',
-								'id':'2'}
-								]},
-							{"name":"section2",
-							"questions":[
-								{'text':'question3',
-								'answers':['answ1','answ2'],
-								'radio':'true',
-								'id':'3'},
-								{'text':'question4',
-								'answers':['answ3','answ4'],
-								'checkbox':'true',
-								'id':'4'}
-								]},
-							{"name":"section3"},
-							{"name":"section4"}
-						]} */);
+						loadDust(sections);
 					});
 				}
     			
@@ -92,20 +66,19 @@ $(function(){
 		if(!currentPage){
 			currentPage="index/";
 			$.ajax({
-			  type: "POST",
-			  url: "/newExaminee",
-			  data: "section="+location.hash.slice(1),
-			  success: function(msg){
-			  if(msg!=="false"){
-				alert( "Твой токен: " + msg );
-				location.hash="";
-				localStorage.setItem("token",msg);
-				localStorage.setItem("currentPage", currentPage);
-				start();
-				} else {
-				//тут если секция не найдена
+				type: "POST",
+				url: "/newExaminee",
+				data: "section="+location.hash.slice(1),
+				success: function(msg){
+					if(msg!=="false"){
+						location.hash="";
+						localStorage.setItem("token",msg);
+						localStorage.setItem("currentPage", currentPage);
+						start();
+					} else {
+						alert("Не шали!");
+					}
 				}
-			  }
 			});
 		} else {
 			start();

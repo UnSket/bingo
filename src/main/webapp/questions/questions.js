@@ -3,6 +3,7 @@ function questions(){
 	$('button').on('click', function(){
 		var $answers=$(".form-check-input");
 		var answer="";
+		var patern = /^.*([a-zA-Zа-яА-Я])+.*/i;
 		if($answers.length > 0){
 			for(var i=0; i<$answers.length; i++){
 				if($answers[i].checked) {
@@ -13,22 +14,19 @@ function questions(){
 		} else {
 			answer = $("#area").val();
 		}
-		if(answer){
-			alert(answer)
+		if(answer && patern.test(answer)){
 			$.ajax({
               type: "POST",
               url: "/addAnswer",
               data: "answer="+answer+"&token="+localStorage.getItem('token'),
               success: function(msg){
               if(msg!=="false"){
-                alert( msg );
                 location.hash="/next";
                 } else {
-                //тут если секция не найдена
+                alert("Не шали!");
                 }
               }
             });
-			location.hash="next";
 		} else {
 			alert("Выберите или введите ответ!");
 			//тут сказать что надо бы заполнить поля

@@ -14,7 +14,6 @@
 					<div class="card border-dark mb-3 text-center mr-auto ml-auto" style="max-width:17em;">
 						<h3 class="card-title">Заполните поля</h3>
 						<div class="card-body text-dark">
-						
 							<input id="name" name="имя" class="mb-2" type="text" placeholder="Введите имя"
 							data-toggle="popover" data-placement="left" data-trigger="manual" data-content="Поле не может быть пустым"><br>
 							<input id="mail" name="почта" class="mb-2" type="text" placeholder="Введите почту" 

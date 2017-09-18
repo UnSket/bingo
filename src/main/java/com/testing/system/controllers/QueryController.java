@@ -1,7 +1,8 @@
 package com.testing.system.controllers;
 
 import java.io.IOException;
-import java.util.Collection;
+import java.util.ArrayList;
+import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -72,7 +73,7 @@ public class QueryController {
 		if(examinee != null){
 			examinee.setName(name);
 			examinee.setEmail(email);
-			examineedata.save(examinee);
+			examineedata.saveAndFlush(examinee);
 			return ResponseEntity.ok("");
 		} else {
 			return ResponseEntity.ok("false");
@@ -89,8 +90,14 @@ public class QueryController {
 					examinee.getAnswers().size()){
 				examinee.getAnswers().add(answersData.save(new Answers(examinee, (Question) (examinee.getSection().getQuestions().toArray())
 						[examinee.getAnswers().size()], answer)));
-				ResponseEntity.ok("Успех");
+				return ResponseEntity.ok("Успех");
 			}
+		} else {
+			List<Examinee> examinees = examineedata.findAll();
+			for (Examinee examinee1 : examinees) {
+				System.out.println(examinee1.getToken());
+			}
+			System.out.println("Нету такого");
 		}
 		return ResponseEntity.ok("false");
 	}
@@ -112,11 +119,6 @@ public class QueryController {
 		}
 	}
 
-
-	/*@GetMapping(value="/getQuestionBySectionName")
-	public ResponseEntity<Collection> getQuestionsBySectionId(@RequestParam("name") String sectionName){
-		return ResponseEntity.ok(questionData.findBySectionsName(sectionName));
-	}*/
 	@PostMapping(value ="/updateQuestion")
 	public ResponseEntity<String> updateQuestion(@RequestParam("jsonObj") String json){
 		JSONObject jsonObject = new JSONObject(json);
@@ -147,12 +149,6 @@ public class QueryController {
 		JSONObject jsonObject = new JSONObject(json);
 		sectionsData.save(new Section(jsonObject.getString("section")));
 		return ResponseEntity.ok("Успех");
-	}
-
-	//добавляет вопрос с заданными полями
-	@GetMapping(value="/addQuestionByGet")
-	public ResponseEntity<String> add(@RequestParam("text") String text, @RequestParam("type") String type, @RequestParam("answers") String answers, @RequestParam("correct_answer") String correct_answer){
-		return ResponseEntity.ok("");
 	}
 
 	@GetMapping(value="/getSections")
