@@ -1,5 +1,6 @@
 package com.testing.system.model;
 
+import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.json.JSONObject;
@@ -14,7 +15,6 @@ import java.util.List;
 public class Question {
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	@Id
-	@JsonIgnore
 	private long id;
 	@JsonIgnore
 	@ManyToMany(cascade = CascadeType.ALL)
@@ -54,8 +54,9 @@ public class Question {
 		this.type = type;
 	}
 
-	public String getAnswers() {
-		return answers;
+	@JsonGetter
+	public String[] getAnswers() {
+		return answers.split(",");
 	}
 
 	public void setAnswers(String answers) {

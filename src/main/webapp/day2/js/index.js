@@ -3,7 +3,7 @@ $(function(){
                 currentPage=localStorage.getItem('currentPage');
     			var path;
     			path = route().path;
-    			if((!path || path[0] != currentPage) && path[0]!=="admin/") {
+    			if(!path || (path[0] != currentPage && path[0]!=="admin/")) {
     				location.hash = currentPage;
     				return;
     			}
@@ -12,6 +12,7 @@ $(function(){
 						$.get("/getQuestion?token="+localStorage.getItem("token"), function(data){
 						    if(data != "false"){
 						        if(data != "end"){
+						            console.log(data);
                                     var question = JSON.parse(data);
                                     loadDust(question);
 							    }else {
@@ -32,6 +33,7 @@ $(function(){
 					case "admin":
 					$.get("/getSections", function(data){
 					var sections = JSON.parse(data);
+					console.log(sections);
 						loadDust(sections/* {
 						'sections' : [
 							{"name":"section1",
@@ -59,7 +61,7 @@ $(function(){
 							{"name":"section3"},
 							{"name":"section4"}
 						]} */);
-					})
+					});
 				}
     			
     			function loadDust(data){
@@ -85,7 +87,7 @@ $(function(){
     	}
 
 	var currentPage;
-	if(route().path[0]!=="admin/") {
+	if(!route().path[0] || route().path[0] !== "admin/") {
 		currentPage = localStorage.getItem("currentPage");
 		if(!currentPage){
 			currentPage="index/";

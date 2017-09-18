@@ -22,7 +22,7 @@
 		{/checkbox.answers}
 {/checkbox}
 {?area}
-		<textarea class="form-control" placeholder="{area}" id="area"></textarea><br>
+		<textarea class="form-control" placeholder="{area.answers}" id="area"></textarea><br>
 {/area}
 	<button class="btn btn-outline-dark" type="button">Ответить</button>
 </div>

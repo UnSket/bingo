@@ -1,6 +1,7 @@
 package com.testing.system.model;
 
 import javax.persistence.*;
+
 @Entity @Table(name="answers")
 public class Answers {
     @Id @GeneratedValue(strategy = GenerationType.AUTO)
