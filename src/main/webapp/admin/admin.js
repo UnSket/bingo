@@ -7,7 +7,7 @@ function admin(){
 		$names[i].href=encodeURI($names[i].href + "#" + $names[i].text);
 		$names[i].text=$names[i].href;
 	}
-	$names.removeAttr('href');
+	//$names.removeAttr('href');
 	$("a").unbind('click');
 	$("a").on("click", function(){
 		$("[data-toggle='popover']").popover('hide');

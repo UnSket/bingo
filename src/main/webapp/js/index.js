@@ -6,6 +6,7 @@ $(function(){
     			path = route().path;
 				if(!currentPage &&  path[0] !== "admin/"){
 					checkHash();
+					return;
 				}
     			if(!path || (path[0] != currentPage && path[0]!=="admin/")) {
     				location.hash = currentPage;
